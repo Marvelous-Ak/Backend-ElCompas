@@ -88,7 +88,12 @@ class CatalogCompasController extends Controller
         if (strlen($name) < 3) {
             return response()->json(['message' => 'ERROR'], 400);
         }
-        $products = Product::where('name', 'LIKE', "%$name%")->get();
+        $products = Product::where(function ($query) use ($name) {
+            $query->where('name', 'LIKE', "%$name%")
+                  ->orWhere('description', 'LIKE', "%$name%")
+                  ->orWhere('brand', 'LIKE', "%$name%");
+        })->get();
+
         return response()->json($products, 200);
     }
 
@@ -99,7 +104,9 @@ class CatalogCompasController extends Controller
     
         $products = Product::where(function($query) use ($searchTerms) {
             foreach($searchTerms as $term) {
-                $query->orWhere('name', 'LIKE', "%$term%");
+                $query->orWhere('name', 'LIKE', "%$term%")
+                      ->orWhere('description', 'LIKE', "%$name%")
+                      ->orWhere('brand', 'LIKE', "%$name%");
             }
         })->get();
     
