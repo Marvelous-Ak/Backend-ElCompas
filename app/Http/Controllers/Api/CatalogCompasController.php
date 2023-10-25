@@ -12,6 +12,9 @@ class CatalogCompasController extends Controller
 {
     public function index($id_categoria){
         $categoria = Catalog::find($id_categoria);
+        if (!$categoria) {
+            return response()->json(['message' => 'Categoría no encontrada'], 404);
+        }
         $productos= $categoria->products;
 
         return response()->json($productos, 200);
@@ -22,6 +25,9 @@ class CatalogCompasController extends Controller
     }
     public function showOne($id_p){
         $producto = Product::find($id_p);
+        if (!$producto) {
+            return response()->json(['error' => 'Producto no encontrado'], 404);
+        }
         return response()->json($producto, 200);
     }
     public function create(Request $request){
@@ -93,10 +99,11 @@ class CatalogCompasController extends Controller
                   ->orWhere('description', 'LIKE', "%$name%")
                   ->orWhere('brand', 'LIKE', "%$name%");
         })->get();
-
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron resultados'], 404);
+        }
         return response()->json($products, 200);
     }
-
     public function searchName2($name){
         
         // Divide la cadena de búsqueda en palabras
@@ -109,7 +116,9 @@ class CatalogCompasController extends Controller
                       ->orWhere('brand', 'LIKE', "%$name%");
             }
         })->get();
-    
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron resultados'], 404);
+        }
         return response()->json($products, 200);
     }
     
