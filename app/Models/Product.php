@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['brand','name','image','promo','price', 'priceAnt', 'description', 'stock'];
+    protected $fillable = ['brand','name','image','promo','price', 'pricePromo', 'description', 'stock'];
 
     public function catalogs(): BelongsToMany
     {
