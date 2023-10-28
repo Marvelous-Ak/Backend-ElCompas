@@ -37,7 +37,7 @@ class CatalogCompasController extends Controller
             'image'=> 'required|string',
             'promo' => 'required|boolean',
             'price' => 'required|numeric',
-            'priceAnt' => 'nullable|numeric',
+            'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
             'categories' => 'required|array', // Se espera un arreglo de categorías
         ]);
@@ -49,7 +49,7 @@ class CatalogCompasController extends Controller
         $nuevoProducto->image = $request->image;
         $nuevoProducto->promo = $request->promo;
         $nuevoProducto->price = $request->price;
-        $nuevoProducto->priceAnt = $request->priceAnt;
+        $nuevoProducto->pricePromo = $request->pricePromo;
         $nuevoProducto->description = $request->description;
         $nuevoProducto->stock = $request->stock;
         $nuevoProducto->save();
@@ -69,13 +69,13 @@ class CatalogCompasController extends Controller
             'image'=> 'required|string',
             'promo' => 'required|boolean',
             'price' => 'required|numeric',
-            'priceAnt' => 'nullable|numeric',
+            'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
             'categories' => 'required|array', // Se espera un arreglo de categorías
         ]);
 
         $productoC->fill($request->only([
-            'brand','name','image','promo','price','priceAnt','description','stock'
+            'brand','name','image','promo','price','pricePromo','description','stock'
         ]));
   
         $productoC->update($request->all());
@@ -86,11 +86,14 @@ class CatalogCompasController extends Controller
     }
     public function deleteP($id_d){
         $productoD = Product::find($id_d);
-        $productoD->delete();
-        return response()->json(['message' => 'Producto Eliminado de manera exitosa'], 200);
-
+        try {
+            $productoD->delete();
+            return response()->json(['message' => 'Producto eliminado de manera exitosa'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al eliminar el producto'], 500);
+        }
     }
-    public function searchName($name){
+    public function searchProduct($name){
         if (strlen($name) < 3) {
             return response()->json(['message' => 'ERROR'], 400);
         }
