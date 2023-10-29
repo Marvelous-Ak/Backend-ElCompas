@@ -14,4 +14,5 @@ Route::controller(CatalogCompasController::class)->group(function (){
     Route::delete('/catalogs/{id}','deleteP');
     Route::get('/search/{name}', 'searchProduct');
     Route::get('/search2/{name}', 'searchName2');
+    Route::get('/categories/{id}', 'showCate');
 });

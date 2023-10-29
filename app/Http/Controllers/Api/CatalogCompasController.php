@@ -34,8 +34,8 @@ class CatalogCompasController extends Controller
         $request->validate([
             'brand' => 'required|string',
             'name' => 'required|string',
-            'image'=> 'required|string',
             'promo' => 'required|boolean',
+            'image'=> 'required',
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
@@ -58,7 +58,7 @@ class CatalogCompasController extends Controller
         $categories = $request->categories;
         $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
 
-        return response()->json(['message' => 'Producto creado con éxito'], 200);
+        return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
     }
     public function update(Request $request, $id_p){
         $productoC = Product::find($id_p);
@@ -66,7 +66,7 @@ class CatalogCompasController extends Controller
         $request->validate([
             'brand' => 'required|string',
             'name' => 'required|string',
-            'image'=> 'required|string',
+            'image'=> 'required',
             'promo' => 'required|boolean',
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
@@ -124,5 +124,48 @@ class CatalogCompasController extends Controller
         }
         return response()->json($products, 200);
     }
-    
+    public function showCate($id){
+        $producto = Product::find($id);
+        $categoria= $producto->catalogs;
+        return response()->json($categoria,200);
+    }
+
+    public function create2(Request $request){
+        $request->validate([
+            'brand' => 'required|string',
+            'name' => 'required|string',
+            'image'=> 'required|image|mimes:jpeg,png,jpg,gif',
+            'promo' => 'required|boolean',
+            'price' => 'required|numeric',
+            'pricePromo' => 'nullable|numeric',
+            'stock'=> 'required|integer',
+            'categories' => 'required|array', // Se espera un arreglo de categorías
+        ]);
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image'); 
+            $imageBase64 = base64_encode(file_get_contents($image));
+        } else {
+            return response()->json(['error' => 'No image found in the request'], 400);
+        }
+
+        // Crear el producto
+        $nuevoProducto = new Product();
+        $nuevoProducto->brand = $request->brand;
+        $nuevoProducto->name = $request->name;
+        $nuevoProducto->image = $request->imageBase64;
+        $nuevoProducto->promo = $request->promo;
+        $nuevoProducto->price = $request->price;
+        $nuevoProducto->pricePromo = $request->pricePromo;
+        $nuevoProducto->description = $request->description;
+        $nuevoProducto->stock = $request->stock;
+        $nuevoProducto->save();
+
+        // Asociar el producto a las categorías
+        $categories = $request->categories;
+        $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
+
+        return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
+    }
 }
