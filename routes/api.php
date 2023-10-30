@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\Api\CatalogCompasController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::controller(CatalogCompasController::class)->group(function (){
+Route::controller(CatalogCompasController::class)->group(function (){ /// Rutas: CatalogCompasController
     Route::get('/catalogs/{id}','index');
     Route::post('/catalogos','create');
     Route::get('/catalogos','showAll');
@@ -15,4 +18,14 @@ Route::controller(CatalogCompasController::class)->group(function (){
     Route::get('/search/{name}', 'searchProduct');
     Route::get('/search2/{name}', 'searchName2');
     Route::get('/categories/{id}', 'showCate');
+});
+
+Route::controller(ProductController::class)->group(function (){ /// Rutas: ProductController
+});
+
+Route::controller(UserController::class)->group(function (){ /// Rutas: UserController
+    Route::post('/users','create');
+});
+
+Route::controller(CommentController::class)->group(function (){ /// Rutas: CommentController
 });
