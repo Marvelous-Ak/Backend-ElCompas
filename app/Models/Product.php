@@ -16,4 +16,9 @@ class Product extends Model
         return $this->belongsToMany(Catalog::class, 'catalog_product');
     }
 
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorities_list');
+    }
+
 }
