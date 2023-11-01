@@ -66,7 +66,7 @@ class CatalogCompasController extends Controller
         $request->validate([
             'brand' => 'required|string',
             'name' => 'required|string',
-            'image'=> 'required',
+            'image'=> 'required|string',
             'promo' => 'required|boolean',
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
@@ -74,11 +74,16 @@ class CatalogCompasController extends Controller
             'categories' => 'required|array', // Se espera un arreglo de categorías
         ]);
 
+
         $productoC->fill($request->only([
-            'brand','name','image','promo','price','pricePromo','description','stock'
+            'brand','name','promo','image','price','pricePromo','description','stock'
         ]));
+        
   
         $productoC->update($request->all());
+
+        /*$productoC ->image = $this->updateImage($request->image);*/
+        //$productoC->save();
 
         $productoC->catalogs()->sync($request->categories);
 
@@ -167,5 +172,6 @@ class CatalogCompasController extends Controller
         $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
 
         return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
-    }
+    }    
+    
 }
