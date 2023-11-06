@@ -81,10 +81,6 @@ class CatalogCompasController extends Controller
         
   
         $productoC->update($request->all());
-
-        /*$productoC ->image = $this->updateImage($request->image);*/
-        //$productoC->save();
-
         $productoC->catalogs()->sync($request->categories);
 
         return response()->json(['message' => 'Información del producto actualizado'], 200);
@@ -134,44 +130,4 @@ class CatalogCompasController extends Controller
         $categoria= $producto->catalogs;
         return response()->json($categoria,200);
     }
-
-    public function create2(Request $request){
-        $request->validate([
-            'brand' => 'required|string',
-            'name' => 'required|string',
-            'image'=> 'required|image|mimes:jpeg,png,jpg,gif',
-            'promo' => 'required|boolean',
-            'price' => 'required|numeric',
-            'pricePromo' => 'nullable|numeric',
-            'stock'=> 'required|integer',
-            'categories' => 'required|array', // Se espera un arreglo de categorías
-        ]);
-
-        if ($request->hasFile('image')) {
-
-            $image = $request->file('image'); 
-            $imageBase64 = base64_encode(file_get_contents($image));
-        } else {
-            return response()->json(['error' => 'No image found in the request'], 400);
-        }
-
-        // Crear el producto
-        $nuevoProducto = new Product();
-        $nuevoProducto->brand = $request->brand;
-        $nuevoProducto->name = $request->name;
-        $nuevoProducto->image = $request->imageBase64;
-        $nuevoProducto->promo = $request->promo;
-        $nuevoProducto->price = $request->price;
-        $nuevoProducto->pricePromo = $request->pricePromo;
-        $nuevoProducto->description = $request->description;
-        $nuevoProducto->stock = $request->stock;
-        $nuevoProducto->save();
-
-        // Asociar el producto a las categorías
-        $categories = $request->categories;
-        $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
-
-        return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
-    }    
-    
 }
