@@ -33,3 +33,5 @@ Route::controller(UserController::class)->group(function (){ /// Rutas: UserCont
 
 Route::controller(CommentController::class)->group(function (){ /// Rutas: CommentController
 });
+
+Route::resource('comments_products', CommentProductController::class);

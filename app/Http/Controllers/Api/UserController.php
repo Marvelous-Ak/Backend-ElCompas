@@ -18,7 +18,6 @@ class UserController extends Controller
         $data = $request->all(); 
 
         $validator = Validator::make($data, [
-            'username' => 'required|string',
             'name' => 'required|string|max:255',
             'lastName' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users',
@@ -31,7 +30,6 @@ class UserController extends Controller
 
         // Crear un nuevo usuario
         $user = User::create([
-            'username' => $data['username'],
             'name' => $data['name'],
             'lastName' => $data['lastName'],
             'email' => $data['email'],
@@ -50,7 +48,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $validator = Validator::make($data, [
-            'username' => 'required|string',
             'name' => 'required|string|max:255',
             'lastName' => 'required|string',
             'email' => [
@@ -68,7 +65,6 @@ class UserController extends Controller
         }
 
         // Editar información de usuario
-        $user-> username = $data['username'];
         $user->name = $data['name'];
         $user->lastName = $data['lastName'];
         $user->email = $data['email'];
@@ -90,7 +86,6 @@ class UserController extends Controller
         $data = $request->all(); 
 
         $validator = Validator::make($data, [
-            'username' => 'required|string',
             'name' => 'required|string|max:255',
             'lastName' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users',
@@ -103,7 +98,6 @@ class UserController extends Controller
 
         // Crear un nuevo usuario
         $user = User::create([
-            'username' => $data['username'],
             'name' => $data['name'],
             'lastName' => $data['lastName'],
             'email' => $data['email'],
@@ -112,5 +106,8 @@ class UserController extends Controller
         ]);
 
         return response()->json(['message' => 'Usuario creado con éxito'], 200);
+    }
+    public function login  (Request $request){
+        
     }
 }
