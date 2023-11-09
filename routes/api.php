@@ -24,8 +24,14 @@ Route::controller(ProductController::class)->group(function (){ /// Rutas: Produ
 });
 
 Route::controller(UserController::class)->group(function (){ /// Rutas: UserController
-    Route::post('/users','create');
+    Route::post('/user','create');
+    Route::get('/user/{id}','read');
+    Route::put('/user/{id}','update');
+    Route::delete('/user/{id}','destroy');
+    Route::post('/userAdmi','createAdmi');
 });
 
 Route::controller(CommentController::class)->group(function (){ /// Rutas: CommentController
 });
+
+Route::resource('comments_products', CommentProductController::class);
