@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\CatalogCompasController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,3 +36,11 @@ Route::controller(CommentController::class)->group(function (){ /// Rutas: Comme
 });
 
 Route::resource('comments_products', CommentProductController::class);
+
+Route::controller(SupplierController::class)->group(function (){ /// Rutas: SupplierController
+    Route::post('/supplier','create');
+    Route::get('/supplier/{id}','read');
+    Route::put('/supplier/{id}','update');
+    Route::delete('/supplier/{id}','delete');
+    Route::get('/supplier','showAll');
+});
