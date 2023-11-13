@@ -108,6 +108,21 @@ class UserController extends Controller
         return response()->json(['message' => 'Usuario creado con éxito'], 200);
     }
     public function login  (Request $request){
-        
+        // Validar credenciales
+        $credentials = $request->only('email', 'password');
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'El usuario no existe'], 404);
+        }
+
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Correo electrónico o contraseña incorrectos'], 401);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+    public function logout(){
     }
 }

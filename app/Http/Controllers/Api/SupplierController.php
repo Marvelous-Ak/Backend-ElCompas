@@ -25,7 +25,7 @@ class SupplierController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response()->json(['errors' => $validator->errors(), 'message' => 'F'], 400);
         }
         $new_supplier = Supplier::create([
             'name' => $data['name'],
@@ -94,4 +94,5 @@ class SupplierController extends Controller
         $proveedores = Supplier::all();
         return response()->json($proveedores, 200);
     }
+    
 }
