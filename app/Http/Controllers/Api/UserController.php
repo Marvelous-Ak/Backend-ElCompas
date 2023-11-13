@@ -13,9 +13,9 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function create(Request $request){
-
-        $data = $request->all(); 
+    public function create(Request $request)
+    {
+        $data = $request->all();
 
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
@@ -37,8 +37,12 @@ class UserController extends Controller
             'rolAdmi' => false
         ]);
 
-        return response()->json(['message' => 'Usuario creado con éxito'], 200);
+        // Iniciar sesión automáticamente después de crear el usuario
+       // Auth::login($user);
+
+        return response()->json(['message' => 'Usuario creado con éxito']);
     }
+
     public function read($id){
         $user = User::findOrFail($id);
         return response()->json($user,200);
