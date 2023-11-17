@@ -30,7 +30,7 @@ Route::controller(UserController::class)->group(function (){ /// Rutas: UserCont
     Route::put('/user/{id}','update');
     Route::delete('/user/{id}','destroy');
     Route::post('/userAdmi','createAdmi');
-    Route::post('/login','login');
+    Route::post('user/login','login');
 });
 
 Route::controller(CommentController::class)->group(function (){ /// Rutas: CommentController
