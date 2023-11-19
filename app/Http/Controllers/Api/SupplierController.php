@@ -19,7 +19,7 @@ class SupplierController extends Controller
             'email' => 'required|string|email|max:255|unique:suppliers',
             'phone' => 'required|numeric|digits:10',
             'address' => 'nullable|string|max:255',
-            'business' => 'required|string|max:250'
+            'business' => 'required|string|max:250|unique:suppliers'
         ]);
 
         if ($validator->fails()) {
@@ -54,8 +54,13 @@ class SupplierController extends Controller
                 Rule::unique('suppliers', 'email')->ignore($supplier->id), // usuario actual
             ],
             'phone' => 'required|numeric|digits:10',
-            'address' => 'required|string|max:255',
-            'business' => 'required|string|max:250'
+            'address' => 'nullable|string|max:255',
+            'business' => [
+                'required',
+                'string',
+                'max:250',
+                Rule::unique('suppliers', 'business')->ignore($supplier->id), // usuario actual
+            ],
         ]);
 
         if ($validator->fails()) {
