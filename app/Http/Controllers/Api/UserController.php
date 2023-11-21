@@ -8,6 +8,7 @@ use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 
 
@@ -108,6 +109,16 @@ class UserController extends Controller
         return response()->json(['message' => 'Usuario creado con éxito'], 200);
     }
     public function login  (Request $request){
-        
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::User();
+            $token = $user->createToken('UserCompas')->accessToken;
+
+            return response()->json(['token' => $token->token, 'user' => $user]);
+        } else {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+    }
+    public function logout(){
     }
 }
