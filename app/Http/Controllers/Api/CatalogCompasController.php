@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Catalog;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +29,10 @@ class CatalogCompasController extends Controller
         if (!$producto) {
             return response()->json(['error' => 'Producto no encontrado'], 404);
         }
+        //$array_suppliers= $producto->suppliers;
+        //$name_suppliers = Supplier::whereIn('id', $array_suppliers)->pluck('business');
+        //$producto->name_suppliers= $name_suppliers;
+        
         return response()->json($producto, 200);
     }
     public function create(Request $request){
@@ -39,7 +44,9 @@ class CatalogCompasController extends Controller
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
+            'cost_of_sale'=> 'required|numeric',
             'categories' => 'required|array', // Se espera un arreglo de categorías
+            'suppliers' => 'required|array',
         ]);
 
         // Crear el producto
@@ -52,11 +59,17 @@ class CatalogCompasController extends Controller
         $nuevoProducto->pricePromo = $request->pricePromo;
         $nuevoProducto->description = $request->description;
         $nuevoProducto->stock = $request->stock;
+        $nuevoProducto->cost_of_sale = $request->cost_of_sale;
         $nuevoProducto->save();
 
         // Asociar el producto a las categorías
         $categories = $request->categories;
         $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
+
+        // Asociar el producto a los proovedores
+        $supplier_names = $request->suppliers;
+        $suppliers = Supplier::whereIn('business', $supplier_names)->pluck('id');
+        $nuevoProducto->suppliers()->sync($suppliers); // Asocia las categorías al proveedor
 
         return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
     }
@@ -71,17 +84,23 @@ class CatalogCompasController extends Controller
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
+            'cost_of_sale'=> 'required|numeric',
             'categories' => 'required|array', // Se espera un arreglo de categorías
+            'suppliers' => 'required|array',
         ]);
 
 
         $productoC->fill($request->only([
-            'brand','name','promo','image','price','pricePromo','description','stock'
+            'brand','name','promo','image','price','pricePromo','description','stock', 'cost_of_sale'
         ]));
         
-  
         $productoC->update($request->all());
+
         $productoC->catalogs()->sync($request->categories);
+        // Asociar el producto a los proovedores
+        $supplier_names = $request->suppliers;
+        $suppliers = Supplier::whereIn('business', $supplier_names)->pluck('id');
+        $productoC->suppliers()->sync($suppliers); // Asocia las categorías al proveedor
 
         return response()->json(['message' => 'Información del producto actualizado'], 200);
     }

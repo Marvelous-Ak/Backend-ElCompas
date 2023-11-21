@@ -16,20 +16,16 @@ class SupplierController extends Controller
         $data = $request->all(); 
 
         $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'lastName' => 'required|string',
             'email' => 'required|string|email|max:255|unique:suppliers',
             'phone' => 'required|numeric|digits:10',
-            'address' => 'required|string|max:255',
-            'business' => 'required|string|max:250'
+            'address' => 'nullable|string|max:255',
+            'business' => 'required|string|max:250|unique:suppliers'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'message' => 'F'], 400);
         }
         $new_supplier = Supplier::create([
-            'name' => $data['name'],
-            'lastName' => $data['lastName'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'address' => $data['address'],
@@ -50,8 +46,6 @@ class SupplierController extends Controller
         $supplier = Supplier::findOrFail($id);
 
         $validator = Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'lastName' => 'required|string',
             'email' => [
                 'required',
                 'string',
@@ -60,8 +54,13 @@ class SupplierController extends Controller
                 Rule::unique('suppliers', 'email')->ignore($supplier->id), // usuario actual
             ],
             'phone' => 'required|numeric|digits:10',
-            'address' => 'required|string|max:255',
-            'business' => 'required|string|max:250'
+            'address' => 'nullable|string|max:255',
+            'business' => [
+                'required',
+                'string',
+                'max:250',
+                Rule::unique('suppliers', 'business')->ignore($supplier->id), // usuario actual
+            ],
         ]);
 
         if ($validator->fails()) {
@@ -69,12 +68,8 @@ class SupplierController extends Controller
         }
 
         // Editar información de proovedor
-        $phone= $data['phone'];
-        //$formatted_phone = substr($phone, 0, 3) . ' ' . substr($phone, 3, 3) . ' ' . substr($phone, 6);
-        $supplier->name = $data['name'];
-        $supplier->lastName = $data['lastName'];
         $supplier->email = $data['email'];
-        $supplier->phone = $phone;//$formatted_phone;
+        $supplier->phone = $data['phone'];
         $supplier->address = $data['address'];
         $supplier->business = $data['business'];
         $supplier->save();
