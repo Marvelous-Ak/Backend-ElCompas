@@ -36,6 +36,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'favorities_list');
     }
+    public function shoppingCart(): HasOne   ///Un usuario tiene un carrito 
+    {
+        return $this->hasOne(ShoppingCart::class);
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

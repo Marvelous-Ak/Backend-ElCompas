@@ -40,6 +40,10 @@ class Product extends Model
         return $this->belongsToMany(User::class, 'favorities_list');
     }
 
+    public function shoppingCarts(): BelongsToMany
+    {
+        return $this->belongsToMany(ShoppingCart::class, 'product_shopping_cart');
+    }
     
 
 }

@@ -38,7 +38,14 @@ class UserController extends Controller
             'rolAdmi' => false
         ]);
 
-        return response()->json(['message' => 'Usuario creado con éxito'], 200);
+        // Loguear al usuario recién creado
+        Auth::login($user);
+
+        // Generar y devolver el token
+        $token = $user->createToken('UserCompas')->accessToken;
+
+        return response()->json(['token' => $token->token, 'user' => $user->rolAdmi]);
+        ///return response()->json(['message' => 'Usuario creado con éxito'], 200);
     }
     public function read($id){
         $user = User::findOrFail($id);
@@ -114,7 +121,7 @@ class UserController extends Controller
             $user = Auth::User();
             $token = $user->createToken('UserCompas')->accessToken;
 
-            return response()->json(['token' => $token->token, 'user' => $user]);
+            return response()->json(['token' => $token->token, 'user' => $user->rolAdmi]);
         } else {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
