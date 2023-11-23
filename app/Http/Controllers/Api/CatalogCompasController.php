@@ -139,4 +139,22 @@ class CatalogCompasController extends Controller
         $categoria= $producto->catalogs;
         return response()->json($categoria,200);
     }
+
+
+    //función para actualizar el PDA
+    public function PDA(){
+        // Verifica si la columna 'promo' es falsa y actualiza 'cost_of_sale' en consecuencia
+        Product::where('promo', false)->update([
+            'cost_of_sale' => \DB::raw('GREATEST(price - 10, price / 2)')
+        ]);
+
+        // Verifica si la columna 'promo' es verdadera y actualiza 'cost_of_sale' en consecuencia
+        Product::where('promo', true)->update([
+            'cost_of_sale' => \DB::raw('GREATEST(pricePromo - 10, pricePromo / 2)')
+        ]);
+
+        return response()->json(['message' => 'update exitosa'], 200);
+        
+    }
+
 }

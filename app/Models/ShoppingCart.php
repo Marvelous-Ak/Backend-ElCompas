@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ShoppingCart extends Model
 {
@@ -19,6 +21,6 @@ class ShoppingCart extends Model
     //Relación NaN: Products
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_shopping_cart')->withPivot('quantity');
+        return $this->belongsToMany(Product::class, 'product_shopping_cart')->withPivot('quantity', 'subtotal');
     }
 }
