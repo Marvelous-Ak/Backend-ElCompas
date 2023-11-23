@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SupplierController;
+use App\Http\Controllers\Api\WarehouseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,5 +49,14 @@ Route::controller(SupplierController::class)->group(function (){ /// Rutas: Supp
 
 Route::controller(CartController::class)->group(function (){ /// Rutas del carrito
     Route::post('/cart/add','addToCart');
-    Route::post('/cart/updateTotalCost','create');
+    Route::put('/cart/updateTotalCost','create');
+});
+
+Route::controller(WarehouseController::class)->group(function (){ /// Rutas de la bodega
+    Route::post('/warehouse/add','addProduct');
+    Route::put('/warehouse/update/{id}','updateProduct');
+    Route::delete('/warehouse/delete/{id}','deleteProduct');
+    Route::get('/warehouse/show/{id}','showProduct');
+    Route::get('/warehouse/showAll','showAll');
+    Route::put('/warehouse/updateQ/{id}','updateQuantity');
 });
