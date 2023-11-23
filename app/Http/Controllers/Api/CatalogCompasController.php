@@ -44,9 +44,8 @@ class CatalogCompasController extends Controller
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
-            'cost_of_sale'=> 'required|numeric',
+            'PDA'=> 'required|numeric',
             'categories' => 'required|array', // Se espera un arreglo de categorías
-            'suppliers' => 'required|array',
         ]);
 
         // Crear el producto
@@ -59,17 +58,12 @@ class CatalogCompasController extends Controller
         $nuevoProducto->pricePromo = $request->pricePromo;
         $nuevoProducto->description = $request->description;
         $nuevoProducto->stock = $request->stock;
-        $nuevoProducto->cost_of_sale = $request->cost_of_sale;
+        $nuevoProducto->cost_of_sale = $request->PDA;
         $nuevoProducto->save();
 
         // Asociar el producto a las categorías
         $categories = $request->categories;
         $nuevoProducto->catalogs()->sync($categories); // Asocia las categorías al producto
-
-        // Asociar el producto a los proovedores
-        $supplier_names = $request->suppliers;
-        $suppliers = Supplier::whereIn('business', $supplier_names)->pluck('id');
-        $nuevoProducto->suppliers()->sync($suppliers); // Asocia las categorías al proveedor
 
         return response()->json(['message' => 'Producto creado con éxito', 'status'=> 0], 200);
     }
@@ -84,23 +78,19 @@ class CatalogCompasController extends Controller
             'price' => 'required|numeric',
             'pricePromo' => 'nullable|numeric',
             'stock'=> 'required|integer',
-            'cost_of_sale'=> 'required|numeric',
+            'PDA'=> 'required|numeric',
             'categories' => 'required|array', // Se espera un arreglo de categorías
-            'suppliers' => 'required|array',
         ]);
 
 
         $productoC->fill($request->only([
-            'brand','name','promo','image','price','pricePromo','description','stock', 'cost_of_sale'
+            'brand','name','promo','image','price','pricePromo','description','stock'
         ]));
+        $productoC->cost_of_sale = $request->PDA;
         
         $productoC->update($request->all());
 
         $productoC->catalogs()->sync($request->categories);
-        // Asociar el producto a los proovedores
-        $supplier_names = $request->suppliers;
-        $suppliers = Supplier::whereIn('business', $supplier_names)->pluck('id');
-        $productoC->suppliers()->sync($suppliers); // Asocia las categorías al proveedor
 
         return response()->json(['message' => 'Información del producto actualizado'], 200);
     }

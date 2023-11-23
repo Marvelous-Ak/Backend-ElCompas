@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 
+
 class WarehouseController extends Controller
 {
     ///agregar nuevo producto a la bodega
@@ -133,7 +134,8 @@ class WarehouseController extends Controller
 
     //mostrar un producto
     public function showProduct($id){
-        $producto = Warehouse::find($id);
+        //$producto = Warehouse::find($id);
+        $producto = Warehouse::with('supplier')->find($id);
         // Verificar si se encontró el producto
         if (!$producto) {
             return response()->json(['error' => 'Producto no encontrado'], 404);
@@ -143,7 +145,7 @@ class WarehouseController extends Controller
     }
     //mostrar todos los productos
     public function showAll(){
-        $productos = Warehouse::all();
+        $productos = Warehouse::with('supplier')->get();
         return response()->json($productos, 200);
     }
 
