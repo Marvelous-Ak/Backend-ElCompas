@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Api\WarehouseController;
+use App\Http\Controllers\Api\CartController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,8 @@ Route::controller(CatalogCompasController::class)->group(function (){ /// Rutas:
     Route::get('/search/{name}', 'searchProduct');
     Route::get('/search2/{name}', 'searchName2');
     Route::get('/categories/{id}', 'showCate');
+
+    Route::put('/catalogs','PDA');
 });
 
 Route::controller(ProductController::class)->group(function (){ /// Rutas: ProductController
@@ -49,8 +52,11 @@ Route::controller(SupplierController::class)->group(function (){ /// Rutas: Supp
 });
 
 Route::controller(CartController::class)->group(function (){ /// Rutas del carrito
-    Route::post('/cart/add','addToCart');
-    Route::put('/cart/updateTotalCost','create');
+    Route::post('/cart/add/{id}','addToCart');
+    //Route::put('/cart/updateTotalCost','updateCart');
+    Route::delete('/cart/delete/{id}','deleteCartItem');
+    Route::post('/cart/create/{id}','createCart');
+    Route::get('/cart/show/{id}','showCartInfo');
 });
 
 Route::controller(WarehouseController::class)->group(function (){ /// Rutas de la bodega
