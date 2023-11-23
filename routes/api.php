@@ -45,6 +45,7 @@ Route::controller(SupplierController::class)->group(function (){ /// Rutas: Supp
     Route::put('/supplier/{id}','update');
     Route::delete('/supplier/{id}','delete');
     Route::get('/supplier','showAll');
+    Route::get('/suppliers','business');
 });
 
 Route::controller(CartController::class)->group(function (){ /// Rutas del carrito

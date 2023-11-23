@@ -89,5 +89,11 @@ class SupplierController extends Controller
         $proveedores = Supplier::all();
         return response()->json($proveedores, 200);
     }
+
+    // nombres
+    public function business() {
+        $nombresDeNegocios = Supplier::pluck('business')->toArray();
+        return response()->json(['business' => $nombresDeNegocios]);
+    }
     
 }
